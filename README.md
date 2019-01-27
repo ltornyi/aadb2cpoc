@@ -1,6 +1,8 @@
 # Use
 
     git clone https://github.com/ltornyi/aadb2cpoc.git
+    cd aadb2cpoc
+    yarn
     react-native run-ios
     react-native run-android
 

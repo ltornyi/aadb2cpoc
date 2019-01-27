@@ -10,7 +10,7 @@ const policies = {
   signUpSignInPolicy: "B2C_1_signupsignin1",
   passwordResetPolicy: "B2C_1_passwordreset1",
 }
-const scopes = ["https://ltornyib2ctenant.onmicrosoft.com/mobile/user_impersonation"];
+const scopes = ["https://ltornyib2ctenant.onmicrosoft.com/backend/scope1"];
 
 const styles = StyleSheet.create({
     errorText: {
