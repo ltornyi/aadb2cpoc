@@ -1,4 +1,11 @@
-# Create
+# Use
+
+    git clone https://github.com/ltornyi/aadb2cpoc.git
+    react-native run-ios
+    react-native run-android
+
+# How it was created
+
     react-native --version="0.57.8" init aadb2cpoc
 
     yarn add react-navigation
@@ -14,12 +21,6 @@
     pod install
     pod update
 
-    add URL scheme, redirection handler as described on [the plugin repo](https://github.com/rmcfarlane82/react-native-msal-plugin#readme).
-    open aadb2cpos.xcworkspace in XCode
-    set up keychain sharing, add com.microsoft.adalcache
-    modify AndroidManifest.xml
+Add URL scheme, redirection handler as described on [the plugin repo](https://github.com/rmcfarlane82/react-native-msal-plugin#add-url-scheme). Open aadb2cpos.xcworkspace in XCode, set up keychain sharing, add com.microsoft.adalcache
 
-# Use
-    git clone https://github.com/ltornyi/aadb2cpoc.git
-    react-native run-ios
-    react-native run-android
+Modify AndroidManifest.xml according to the instructions [here](https://github.com/rmcfarlane82/react-native-msal-plugin#android-setup).
