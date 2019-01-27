@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, Button, FlatList} from 'react-native';
+import {Text, View, StyleSheet, Button, FlatList, TextInput} from 'react-native';
 import MsalPlugin, {MsalUIBehavior} from "react-native-msal-plugin";
 import { NavigationEvents } from 'react-navigation';
 import jwt_decode from 'jwt-decode';
@@ -36,6 +36,8 @@ const styles = StyleSheet.create({
     }
 });
 
+const apiEndpoint = 'https://ltornyi-funcapp.azurewebsites.net/api/greeting?code=VxsX0SoGDPZidwAgAr4AjzRtiWmNf/3QMbI2jCQnbUs9SSnO46eAvg==';
+
 export default class UserScreen extends React.Component {
     static navigationOptions = {
         title: 'User',
@@ -48,7 +50,8 @@ export default class UserScreen extends React.Component {
             loggedIn: false,
             authResult: {},
             hasError: false,
-            errorMsg: ''
+            errorMsg: '',
+            textValue: ''
         }
         /* this.state.authResult.accessToken
                                 .userInfo
@@ -74,8 +77,15 @@ export default class UserScreen extends React.Component {
     render() {
         let idTokenArray;
         if (this.state.loggedIn) {
-            const idTokenDecoded = jwt_decode(this.state.authResult.idToken);
-            idTokenArray = Object.entries(idTokenDecoded);
+            try {
+                const idTokenDecoded = jwt_decode(this.state.authResult.idToken);
+                // const idTokenDecoded = jwt_decode(this.state.authResult.accessToken);
+                idTokenArray = Object.entries(idTokenDecoded);
+            } catch(e) {
+                console.error('error decoding token');
+                console.error(e);
+            }
+            
         }
         return (
         <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
@@ -92,6 +102,14 @@ export default class UserScreen extends React.Component {
                                         renderItem={({item}) => this.renderIdTokenItem(item)}
                                         keyExtractor={this.keyExtractor}
                                      />
+                                     <View style={{flexDirection: 'row'}}>
+                                         <TextInput style={{width:150, borderBottomWidth: 1}}onChangeText={(txt) => this.handleTextChange(txt)} value={this.state.textValue}></TextInput>
+                                         <Button onPress={this.handleAPICall} title="Call API"></Button>
+                                     </View>
+                                     <View style={{flexDirection: 'row'}}>
+                                         <Text>Response:</Text>
+                                         <Text>{this.state.apiResponse}</Text>
+                                     </View>
                                      <Button onPress={() => this.doLogout()} title="Logout" />
                                      </View>)}
         </View>
@@ -101,6 +119,52 @@ export default class UserScreen extends React.Component {
     willFocus() {
         if (this.state.loggedIn == false) {
             this.doLogin();
+        }
+    }
+
+    handleAPICall = async () => {
+        try {
+            await this.refreshToken();
+            let response = await fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    Authorization: 'Bearer ' + this.state.authResult.accessToken
+                },
+                body: JSON.stringify({
+                    name: this.state.textValue
+                })
+            });
+            this.handleAPIResponse(response);
+        } catch (error) {
+            console.error('handleAPICall');
+            console.error(error);
+        }
+    }
+
+    handleAPIResponse(response) {
+        this.setState({
+            apiResponse: response.status + ':' + response._bodyText
+        });
+    }
+
+    handleTextChange(txt) {
+        this.setState({
+            textValue: txt
+        });
+    }
+
+    async refreshToken() {
+        try {
+            const result = await this.msalPlugin.acquireTokenSilentAsync(
+                scopes,
+                this.state.authResult.userInfo.userIdentifier
+            );
+            this.setState({
+                authResult: result
+            });
+        } catch(e) {
+            console.error('refreshToken');
+            console.error(e);
         }
     }
 
@@ -115,7 +179,8 @@ export default class UserScreen extends React.Component {
             this.setState({
                 hasError: false,
                 loggedIn: true,
-                authResult: result
+                authResult: result,
+                apiResponse: ''
             });
         } catch (error) {
             console.log('Login error');
