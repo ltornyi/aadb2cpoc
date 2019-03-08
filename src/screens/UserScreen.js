@@ -4,13 +4,13 @@ import MsalPlugin, {MsalUIBehavior} from "react-native-msal-plugin";
 import { NavigationEvents } from 'react-navigation';
 import jwt_decode from 'jwt-decode';
 
-const authority = "https://ltornyib2ctenant.b2clogin.com/tfp/ltornyib2ctenant.onmicrosoft.com";
-const applicationId = "f17d0cb3-cc66-45e0-85a5-8517ece7a9b0";
+const authority = "https://blkdigitalmarketing.b2clogin.com/tfp/blkdigitalmarketing.onmicrosoft.com";
+const applicationId = "56b8c0c2-9d1f-4e70-9f01-e767c6658566";
 const policies = {
-  signUpSignInPolicy: "B2C_1_signupsignin1",
-  passwordResetPolicy: "B2C_1_passwordreset1",
+  signUpSignInPolicy: "B2C_1_signupsignin",
+  passwordResetPolicy: "B2C_1_passwordreset",
 }
-const scopes = ["https://ltornyib2ctenant.onmicrosoft.com/backend/scope1"];
+const scopes = ["https://blkdigitalmarketing.onmicrosoft.com/backend/read_ab"];
 
 const styles = StyleSheet.create({
     errorText: {
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const apiEndpoint = 'https://ltornyi-funcapp.azurewebsites.net/api/greeting?code=VxsX0SoGDPZidwAgAr4AjzRtiWmNf/3QMbI2jCQnbUs9SSnO46eAvg==';
+const apiEndpoint = 'https://otto-poc-apis.azurewebsites.net/api/helloWorld?code=f8nqBJNNrUrNE5h6j9ZXL33iaz929qMroYg/bX4olcGym9ThIeOJDQ==';
 
 export default class UserScreen extends React.Component {
     static navigationOptions = {
